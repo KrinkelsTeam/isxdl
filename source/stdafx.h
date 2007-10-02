@@ -22,7 +22,7 @@ extern CAppModule _Module;
 #include <atlutil.h>
 #include <atlfile.h>
 #include <atltypes.h>
-#include <henden/all.h>
+#include "Thread.h"
 
 // --------------------------------------------------------- Internet
 #include <wininet.h>
