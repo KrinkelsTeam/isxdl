@@ -110,9 +110,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
-				Description="Copying file to demo folder"
-				CommandLine="copy $(TargetPath) ..\demo&#x0D;&#x0A;"
-				Outputs="..\demo\isxdl.dll"
+				Description="Performing Custom Build Step"
+				CommandLine=""
+				Outputs=""
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
