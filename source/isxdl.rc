@@ -27,15 +27,13 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 //
 
 IDD_DOWNLOAD DIALOGEX 0, 0, 330, 221
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | 
-    WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "File Download"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     CONTROL         "",IDC_HEADERRECT,"Static",SS_WHITERECT,0,0,332,35
     LTEXT           "*",IDC_HEADERLABEL,16,6,271,8,0,WS_EX_TRANSPARENT
-    LTEXT           "*",IDC_HEADERDESCRIPTION,27,16,260,18,0,
-                    WS_EX_TRANSPARENT
+    LTEXT           "*",IDC_HEADERDESCRIPTION,27,16,260,18,0,WS_EX_TRANSPARENT
     CONTROL         109,IDC_PICTURE,"Static",SS_BITMAP,293,1,35,33
     DEFPUSHBUTTON   "Cancel",IDOK,272,200,50,14
     LTEXT           "File:",IDC_STATIC_FILE,27,45,85,8
@@ -50,11 +48,10 @@ BEGIN
     LTEXT           "",IDC_REMAINING,112,93,191,8
     LTEXT           "Current File:",IDC_STATIC_PROGRESSFILE,27,114,77,8
     RTEXT           "",IDC_STATUS_FILE,104,114,199,8
-    CONTROL         "",IDC_PROGRESS_FILE,"msctls_progress32",0x1,27,125,276,
-                    13
+    CONTROL         "",IDC_PROGRESS_FILE,"msctls_progress32",PBS_SMOOTH,27,125,276,13
     LTEXT           "Overall Progress:",IDC_STATIC_PROGRESSALL,27,142,77,8
     RTEXT           "",IDC_STATUS_OVERALL,104,142,199,8
-    CONTROL         "",IDC_PROGRESS,"msctls_progress32",0x1,27,153,276,13
+    CONTROL         "",IDC_PROGRESS,"msctls_progress32",PBS_SMOOTH,27,153,276,13
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,193,332,1
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,35,332,1
 END
@@ -126,8 +123,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 5,1,5,0
- PRODUCTVERSION 5,1,5,0
+ FILEVERSION 5,2,5,0
+ PRODUCTVERSION 5,2,5,0
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -145,12 +142,12 @@ BEGIN
             VALUE "Comments", "http://www.istool.org/"
             VALUE "CompanyName", "Bjørnar Henden"
             VALUE "FileDescription", "Download DLL"
-            VALUE "FileVersion", "5, 1, 5, 0"
+            VALUE "FileVersion", "5, 2, 5, 0"
             VALUE "InternalName", "isxdl"
-            VALUE "LegalCopyright", "Copyright © 2002-2005"
+            VALUE "LegalCopyright", "Copyright © 2002-2009"
             VALUE "OriginalFilename", "isxdl.dll"
             VALUE "ProductName", "ISX Download DLL"
-            VALUE "ProductVersion", "5, 1, 5, 0"
+            VALUE "ProductVersion", "5, 2, 5, 0"
         END
     END
     BLOCK "VarFileInfo"
