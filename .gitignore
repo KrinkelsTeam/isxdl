@@ -1,2 +1,6 @@
 *.user
 .vs
+/source/_TEMP
+/source/Release
+/source/Debug
+*.aps

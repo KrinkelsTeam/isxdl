@@ -113,7 +113,7 @@ void CDownload::SetFileInfo(LPCTSTR pszURL,CFileInfo* m_pFileInfo) {
 	str.Replace(_T("%2"),tmp);
 	tmp.Format(_T("%d"),m_nFileCount);
 	str.Replace(_T("%3"),tmp);
-	_tcscpy(m_pFileInfo->m_szName,strFilePart);
+	_tcscpy_s(m_pFileInfo->m_szName,_countof(m_pFileInfo->m_szName),strFilePart);
 
 	PostTxtMsg(UWM_TEXT,IDC_FILE,str);
 }
@@ -139,8 +139,8 @@ void CDownload::AddFile(LPCTSTR pszURL,LPCTSTR pszFile,DWORD dwSize/*=0*/) {
 
 	CFileInfo* fileInfo = new CFileInfo();
 	ZeroMemory(fileInfo,sizeof CFileInfo);
-	_tcscpy(fileInfo->m_szURL,pszURL);
-	_tcscpy(fileInfo->m_szFile,pszFile);
+	_tcscpy_s(fileInfo->m_szURL,_countof(fileInfo->m_szURL),pszURL);
+	_tcscpy_s(fileInfo->m_szFile,_countof(fileInfo->m_szURL),pszFile);
 	fileInfo->m_uLength = dwSize;
 	m_files.Add(fileInfo);
 }
@@ -807,7 +807,7 @@ bool CDownload::GetSysError(CString& ref,DWORD dwError/*=GetLastError()*/,LPCTST
 
 void CDownload::PostTxtMsg(UINT uMsg,UINT uID,CString& str) {
 	LPTSTR pszText = new TCHAR[str.GetLength()+1];
-	_tcscpy(pszText,str);
+	_tcscpy_s(pszText,str.GetLength()+1,str);
 	PostMessage(m_hWndServer,uMsg,(WPARAM)uID,(LPARAM)pszText);
 }
 
