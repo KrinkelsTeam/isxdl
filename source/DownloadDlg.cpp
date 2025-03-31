@@ -30,12 +30,12 @@ CDownloadDlg::CDownloadDlg(HWND hWndParent) : IDD(m_nDialogID), m_hWndParent(hWn
 	else
 		m_strTitle = m_strOptionTitle;
 
-	if(m_strOptionLabel.IsEmpty()) GetString(IDS_LABEL,m_strOptionLabel);
-	if(m_strOptionDescription.IsEmpty()) GetString(IDS_DESCRIPTION,m_strOptionDescription);
+	if(m_strOptionLabel.IsEmpty()) GetString(IDS_LABEL, m_strOptionLabel);
+	if(m_strOptionDescription.IsEmpty()) GetString(IDS_DESCRIPTION, m_strOptionDescription);
 	m_pSmallWizardImage = NULL;
 	if(!m_strSmallWizardImage.IsEmpty()) {
 		// "F:\\UTVK\\MISC\\isxdl\\WizModernSmallImage-IS.bmp"
-		OleLoadPicturePath(CT2W(m_strSmallWizardImage),NULL,0,0,IID_IPicture,(LPVOID*)&m_pSmallWizardImage);
+		OleLoadPicturePath(CT2W(m_strSmallWizardImage), NULL, 0, 0, IID_IPicture, (LPVOID*)&m_pSmallWizardImage);
 	}
 }
 
@@ -111,7 +111,7 @@ LRESULT CDownloadDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 			// convert himetric to pixels
 			sizeInPix.cx = (nPixelsPerInchX * sizeInHiMetric.cx + HIMETRIC_PER_INCH / 2) / HIMETRIC_PER_INCH;
 			sizeInPix.cy = (nPixelsPerInchY * sizeInHiMetric.cy + HIMETRIC_PER_INCH / 2) / HIMETRIC_PER_INCH;
-			if(sizeInPix.cx>59 || sizeInPix.cy>59) {
+			if(sizeInPix.cx>59 || sizeInPix.cy > 59) {
 				sizeInPix.cx = 55;
 				sizeInPix.cy = 55;
 			}
@@ -128,7 +128,7 @@ LRESULT CDownloadDlg::OnPaint(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 				rc.bottom = rc.top + sizeInPix.cy;
 			}
 			//rc.InflateRect(sizeInPix.cx - rc.Width(),sizeInPix.cy - rc.Height());
-			m_pSmallWizardImage->Render(dc,rc.left,rc.top,rc.Width(),rc.Height(),0,sizeInHiMetric.cy,sizeInHiMetric.cx,-sizeInHiMetric.cy,&rc);
+			m_pSmallWizardImage->Render(dc, rc.left, rc.top, rc.Width(), rc.Height(), 0, sizeInHiMetric.cy, sizeInHiMetric.cx, -sizeInHiMetric.cy, &rc);
 		}
 #endif
 	}
@@ -145,8 +145,8 @@ LRESULT CDownloadDlg::OnThreadDone(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 LRESULT CDownloadDlg::OnSysCommand(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled) {
 	if((wParam & 0xFFF0) == IDM_ABOUT) {
 		CString str;
-		GetString(IDS_ABOUT,str);
-		MessageBox(str,m_strTitle,MB_OK|MB_ICONINFORMATION);
+		GetString(IDS_ABOUT, str);
+		MessageBox(str, m_strTitle, MB_OK|MB_ICONINFORMATION);
 	} else
 		bHandled = FALSE;
 
@@ -168,8 +168,8 @@ LRESULT CDownloadDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 	EnableMenuItem(hMenu,SC_CLOSE,MF_BYCOMMAND|MF_GRAYED);
 	AppendMenu(hMenu,MF_SEPARATOR,0,NULL);
 	CString str;
-	GetString(IDM_ABOUT,str);
-	AppendMenu(hMenu,MF_ENABLED|MF_STRING,IDM_ABOUT,str);
+	GetString(IDM_ABOUT, str);
+	AppendMenu(hMenu,MF_ENABLED|MF_STRING,IDM_ABOUT, str);
 
 	// center the dialog on the screen
 	CenterWindow(GetParent());
@@ -185,10 +185,10 @@ LRESULT CDownloadDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 	if(m_hWndParent && !IsSimple()) ::ShowWindow(m_hWndParent,SW_HIDE);
 
 	DWORD dwThreadID;
-	m_hThread = CreateThread(NULL,0,ThreadProc,(LPVOID)this,0,&dwThreadID);
+	m_hThread = CreateThread(NULL, 0, ThreadProc, (LPVOID)this, 0, &dwThreadID);
 
 	SetWindowText(m_strTitle);
-	if(IsSimple()) SetDlgItemText(IDC_SIMPLE,m_strOptionSimple);
+	if(IsSimple()) SetDlgItemText(IDC_SIMPLE, m_strOptionSimple);
 
 #ifdef WIZ
 	if(GetDlgItem(IDC_HEADERLABEL)) {
@@ -216,7 +216,7 @@ LRESULT CDownloadDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lP
 		if(GetString(IDC_STATIC_PROGRESSFILE,tmp)) GetDlgItem(IDC_STATIC_PROGRESSFILE).SetWindowText(tmp);
 		if(GetString(IDC_STATIC_PROGRESSALL,tmp)) GetDlgItem(IDC_STATIC_PROGRESSALL).SetWindowText(tmp);
 	}
-	if(GetString(167,tmp)) GetDlgItem(IDOK).SetWindowText(tmp);
+	if(GetString(167, tmp)) GetDlgItem(IDOK).SetWindowText(tmp);
 
 	return TRUE;
 }
@@ -234,15 +234,15 @@ LRESULT CDownloadDlg::OnCloseCmd(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
 	CString strRes;
 	GetString(IDS_ABORT,strRes);
 	m_bBusy = true;
-	long nRet = ::MessageBox(m_hWnd,strRes,m_strTitle,MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2);
+	long nRet = ::MessageBox(m_hWnd, strRes, m_strTitle, MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2);
 	m_bBusy = false;
 	if(m_bThreadDone) {
 		EndDialog(IDOK);
 		return 0;
 	}
-	if(nRet==IDNO) return 0;
+	if(nRet == IDNO) return 0;
 
-	Henden::CSingleLock lock(m_cs,true);
+	Henden::CSingleLock lock(m_cs, true);
 	m_bAbort = true;
 	m_bAskRetry = false;
 	if(m_hFile) {
@@ -278,7 +278,7 @@ LRESULT CDownloadDlg::OnErrorDlg(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/
 		m_hWnd, 
 		hFile, 
 		ERROR_INTERNET_INCORRECT_PASSWORD, 
-		FLAGS_ERROR_UI_FILTER_FOR_ERRORS|FLAGS_ERROR_UI_FLAGS_GENERATE_DATA|FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS, 
+		FLAGS_ERROR_UI_FILTER_FOR_ERRORS | FLAGS_ERROR_UI_FLAGS_GENERATE_DATA | FLAGS_ERROR_UI_FLAGS_CHANGE_OPTIONS, 
 		NULL
 	) == ERROR_INTERNET_FORCE_RETRY;
 	///AtlMessageBox(m_hWndServer,"dlg2");
@@ -287,21 +287,21 @@ LRESULT CDownloadDlg::OnErrorDlg(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/
 }
 
 LRESULT CDownloadDlg::OnMsgBox(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
-	m_nMsgBoxResult = MessageBox(m_strError,m_strTitle,(UINT)wParam);
+	m_nMsgBoxResult = MessageBox(m_strError, m_strTitle, (UINT)wParam);
 	SetEvent(m_hEventWait);
 	return 0;
 }
 
 LRESULT CDownloadDlg::OnText(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/) {
 	LPTSTR pszStatus = (LPTSTR)lParam;
-	if(!IsSimple()) SetDlgItemText((int)wParam,pszStatus);
+	if(!IsSimple()) SetDlgItemText((int)wParam, pszStatus);
 	delete []pszStatus;
 	return 0;
 }
 
 LRESULT CDownloadDlg::OnPosFile(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/) {
 	if(!IsSimple()) {
-		m_wndProgressFile.SetRange32(0,(int)lParam);
+		m_wndProgressFile.SetRange32(0, (int)lParam);
 		m_wndProgressFile.SetPos((int)wParam);
 	}
 	return 0;
@@ -309,7 +309,7 @@ LRESULT CDownloadDlg::OnPosFile(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOO
 
 LRESULT CDownloadDlg::OnPosAll(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/) {
 	if(!IsSimple()) {
-		m_wndProgressAll.SetRange32(0,(int)lParam);
+		m_wndProgressAll.SetRange32(0, (int)lParam);
 		m_wndProgressAll.SetPos((int)wParam);
 	}
 	return 0;
@@ -317,7 +317,7 @@ LRESULT CDownloadDlg::OnPosAll(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL
 
 LRESULT CDownloadDlg::OnUserPass(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/) {
 	CUserPassDlg dlg((CUserPass*)lParam);
-	m_bErrorDlgResult = dlg.DoModal(m_hWnd)==IDOK;
+	m_bErrorDlgResult = dlg.DoModal(m_hWnd) == IDOK;
 	SetEvent(m_hEventWait);
 	return 0;
 }

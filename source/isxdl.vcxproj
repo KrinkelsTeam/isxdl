@@ -125,6 +125,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="SplitURL.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Thread.h" />
     <ClInclude Include="UserPassDlg.h" />
   </ItemGroup>
   <ItemGroup>

@@ -70,8 +70,8 @@ protected:
 
 
 	static void __stdcall CallMaster(HINTERNET, DWORD dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD);
-	void StatusCallback(DWORD dwInternetStatus,LPVOID lpvStatusInformation);
-	void SetFileInfo(LPCTSTR pszURL,CFileInfo* m_pFileInfo);
+	void StatusCallback(DWORD dwInternetStatus, LPVOID lpvStatusInformation);
+	void SetFileInfo(LPCTSTR pszURL, CFileInfo* m_pFileInfo);
 
 	void SetServer(HWND hWndServer);
 
@@ -83,19 +83,19 @@ protected:
 	static DWORD WINAPI ThreadProc(LPVOID lpParameter);
 	DWORD ThreadProc();
 	bool Run();
-	bool DoOperation(CAtlFile& file,ULONGLONG dwLength,ULONGLONG& dwTotal,ULONGLONG& dwTotalSize,CFileInfo& fileInfo,ULONGLONG nResumePos=0);
+	bool DoOperation(CAtlFile& file, ULONGLONG dwLength, ULONGLONG& dwTotal, ULONGLONG& dwTotalSize, CFileInfo& fileInfo, ULONGLONG nResumePos = 0);
 	bool Abort();
-	void GetInetError(CString& ref,DWORD dwLastError=GetLastError());
-	static bool GetSysError(CString& ref,DWORD dwError=GetLastError(),LPCTSTR pszModule=NULL);
-	ULONGLONG GetURLLength(HINTERNET m_hInternet,LPCTSTR pszURL);
-	void PostTxtMsg(UINT uMsg,UINT uID,CString& str);
+	void GetInetError(CString& ref, DWORD dwLastError = GetLastError());
+	static bool GetSysError(CString& ref, DWORD dwError = GetLastError(), LPCTSTR pszModule = NULL);
+	ULONGLONG GetURLLength(HINTERNET m_hInternet, LPCTSTR pszURL);
+	void PostTxtMsg(UINT uMsg, UINT uID, CString& str);
 
 	virtual bool IsSimple() = 0;
 
 public:
 	static UINT GetFileCount();
 	static bool IsConnected();
-	static void AddFile(LPCTSTR pszURL,LPCTSTR pszFile,DWORD dwSize=0);
+	static void AddFile(LPCTSTR pszURL, LPCTSTR pszFile, DWORD dwSize = 0);
 	static void ClearFiles();
-	static bool GetString(UINT uID,CString& str);
+	static bool GetString(UINT uID, CString& str);
 };

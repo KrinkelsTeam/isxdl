@@ -40,7 +40,7 @@ public:
 class CSingleLock {
 public:
 	/// Constructs the lock object
-	CSingleLock(CCriticalSection& cs,bool bInitialLock=false) : m_cs(cs) {
+	CSingleLock(CCriticalSection& cs, bool bInitialLock = false) : m_cs(cs) {
 		m_bLocked = false;
 		if(bInitialLock)
 			Lock();
@@ -52,13 +52,13 @@ public:
 	}
 	/// Locks the critical section
 	void Lock() {
-		ATLASSERT(m_bLocked==false);
+		ATLASSERT(m_bLocked == false);
 		m_cs.Enter();
 		m_bLocked = true;
 	}
 	/// Unlocks the critical section
 	void Unlock() {
-		ATLASSERT(m_bLocked==true);
+		ATLASSERT(m_bLocked == true);
 		m_cs.Leave();
 		m_bLocked = false;
 	}
@@ -129,8 +129,8 @@ private:
 class CMutex {
 public:
 	/// Constructor
-	CMutex(bool bInitiallyOwn=false,LPCTSTR pszName=NULL,LPSECURITY_ATTRIBUTES pszAttribute=NULL) {
-		m_hObject = ::CreateMutex(pszAttribute,bInitiallyOwn,pszName);
+	CMutex(bool bInitiallyOwn = false, LPCTSTR pszName = NULL, LPSECURITY_ATTRIBUTES pszAttribute = NULL) {
+		m_hObject = ::CreateMutex(pszAttribute, bInitiallyOwn, pszName);
 	}
 
 	/// Destructor
