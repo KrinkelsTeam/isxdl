@@ -328,8 +328,11 @@ status_moved:
 			return false;
 		}
 
-		if(url.GetScheme() == INTERNET_SCHEME_HTTP) {
+		if(url.GetScheme() == INTERNET_SCHEME_HTTP || url.GetScheme() == INTERNET_SCHEME_HTTPS) {
 			dwService = INTERNET_SERVICE_HTTP;
+			if (url.GetScheme() == INTERNET_SCHEME_HTTPS) {
+				dwFlags |= INTERNET_FLAG_SECURE;
+			}
 		} else if(url.GetScheme() == INTERNET_SCHEME_FTP) {
 			dwService = INTERNET_SERVICE_FTP;
 			dwFlags |= INTERNET_FLAG_PASSIVE;
@@ -371,9 +374,12 @@ reconnect:
 		CString strObject(url.GetURLPath());
 		strObject += url.GetExtraInfo();
 
-		if(url.GetScheme() == INTERNET_SCHEME_HTTP) {
-			m_hFile = HttpOpenRequest(m_hConn, NULL, strObject, NULL, NULL, m_ppszAcceptTypes,
-				/*INTERNET_FLAG_NO_AUTO_REDIRECT|*/INTERNET_FLAG_RELOAD | INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_KEEP_CONNECTION, (DWORD_PTR)this);
+		if(url.GetScheme() == INTERNET_SCHEME_HTTP || url.GetScheme() == INTERNET_SCHEME_HTTPS) {
+			DWORD dwFlags = INTERNET_FLAG_RELOAD | INTERNET_FLAG_DONT_CACHE | INTERNET_FLAG_KEEP_CONNECTION;
+			if (url.GetScheme() == INTERNET_SCHEME_HTTPS) {
+				dwFlags |= INTERNET_FLAG_SECURE;
+			}
+			m_hFile = HttpOpenRequest(m_hConn, NULL, strObject, NULL, NULL, m_ppszAcceptTypes, dwFlags, (DWORD_PTR)this);
 		} else if(url.GetScheme() == INTERNET_SCHEME_FTP) {
 			// Remove leading '/'
 			if(strObject.GetLength() > 0 && strObject[0] == _T('/')) strObject.Delete(0);
@@ -391,7 +397,7 @@ reconnect:
 
 		lock.Unlock();
 resend:
-		if(url.GetScheme() == INTERNET_SCHEME_HTTP) {
+		if(url.GetScheme() == INTERNET_SCHEME_HTTP || url.GetScheme() == INTERNET_SCHEME_HTTPS) {
 #ifdef USE_RESUME
 			if(HttpSendRequest(m_hFile, pszHeaders, strRangeHeader.GetLength(), NULL, 0))
 #else
@@ -679,8 +685,11 @@ status_moved:
 	DWORD dwFlags = 0;
 	DWORD dwService = 0;
 
-	if(url.GetScheme() == INTERNET_SCHEME_HTTP) {
+	if(url.GetScheme() == INTERNET_SCHEME_HTTP || url.GetScheme() == INTERNET_SCHEME_HTTPS) {
 		dwService = INTERNET_SERVICE_HTTP;
+		if (url.GetScheme() == INTERNET_SCHEME_HTTPS) {
+			dwFlags |= INTERNET_FLAG_SECURE;
+		}
 	} else if(url.GetScheme() == INTERNET_SCHEME_FTP) {
 		dwService = INTERNET_SERVICE_FTP;
 		dwFlags |= INTERNET_FLAG_PASSIVE;
@@ -701,8 +710,12 @@ status_moved:
 	CString strObject = url.GetURLPath();
 	strObject += url.GetExtraInfo();
 
-	if(url.GetScheme() == INTERNET_SCHEME_HTTP) {
-		hFile = HttpOpenRequest(hConn, _T("HEAD"), strObject, NULL, NULL, m_ppszAcceptTypes, INTERNET_FLAG_EXISTING_CONNECT | INTERNET_FLAG_RELOAD, 0);
+	if(url.GetScheme() == INTERNET_SCHEME_HTTP || url.GetScheme() == INTERNET_SCHEME_HTTPS) {
+		DWORD dwHttpFlags = INTERNET_FLAG_EXISTING_CONNECT | INTERNET_FLAG_RELOAD;
+		if (url.GetScheme() == INTERNET_SCHEME_HTTPS) {
+			dwHttpFlags |= INTERNET_FLAG_SECURE;
+		}
+		hFile = HttpOpenRequest(hConn, _T("HEAD"), strObject, NULL, NULL, m_ppszAcceptTypes, dwHttpFlags, 0);
 		if(!hFile) {
 			InternetCloseHandle(hConn);
 			return -1;
