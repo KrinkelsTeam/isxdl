@@ -114,6 +114,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\HISTORY.md" />
     <None Include="..\isxdl.htm">
       <DeploymentContent>true</DeploymentContent>
     </None>
@@ -133,11 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="setup.ico" />
-    <Image Include="WizModernSmallImage.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\history.txt" />
-    <Text Include="..\todo.txt" />
+    <Image Include="WizardSmallImage.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

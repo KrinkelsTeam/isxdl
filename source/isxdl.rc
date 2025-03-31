@@ -162,7 +162,7 @@ END
 // Bitmap
 //
 
-IDB_SMALL               BITMAP                  "WizModernSmallImage.bmp"
+IDB_SMALL               BITMAP                  "WizardSmallImage.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

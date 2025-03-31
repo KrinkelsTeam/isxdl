@@ -33,6 +33,7 @@
       <Filter>Source Files</Filter>
     </None>
     <None Include="..\isxdl.htm" />
+    <None Include="..\HISTORY.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Download.h">
@@ -66,12 +67,8 @@
     <Image Include="setup.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="WizModernSmallImage.bmp">
+    <Image Include="WizardSmallImage.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\history.txt" />
-    <Text Include="..\todo.txt" />
   </ItemGroup>
 </Project>
