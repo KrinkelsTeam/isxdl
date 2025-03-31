@@ -17,7 +17,7 @@ void CDownloadDlg::CleanupStatic() {
 	ClearFiles();
 
 	if(CDownloadDlg::m_hInternet) {
-		inet.InternetCloseHandle(CDownloadDlg::m_hInternet);
+		InternetCloseHandle(CDownloadDlg::m_hInternet);
 		CDownloadDlg::m_hInternet = NULL;
 	}
 }
@@ -246,15 +246,15 @@ LRESULT CDownloadDlg::OnCloseCmd(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*
 	m_bAbort = true;
 	m_bAskRetry = false;
 	if(m_hFile) {
-		inet.InternetCloseHandle(m_hFile);
+		InternetCloseHandle(m_hFile);
 		m_hFile = NULL;
 	}
 	if(m_hConn) {
-		inet.InternetCloseHandle(m_hConn);
+		InternetCloseHandle(m_hConn);
 		m_hConn = NULL;
 	}
 	if(m_hInternet) {
-		inet.InternetCloseHandle(m_hInternet);
+		InternetCloseHandle(m_hInternet);
 		m_hInternet = NULL;
 	}
 	CWindow wndCancel = GetDlgItem(IDCANCEL);
@@ -269,12 +269,12 @@ LRESULT CDownloadDlg::OnErrorDlg(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/
 	if(hFile) {
 		DWORD dwSize;
 		do {
-			inet.InternetReadFile(hFile, (LPVOID)szBuffer, sizeof szBuffer, &dwSize);
+			InternetReadFile(hFile, (LPVOID)szBuffer, sizeof szBuffer, &dwSize);
 		} while(dwSize);
 	}
 
 	///AtlMessageBox(m_hWndServer,"dlg");
-	m_bErrorDlgResult = inet.InternetErrorDlg(
+	m_bErrorDlgResult = InternetErrorDlg(
 		m_hWnd, 
 		hFile, 
 		ERROR_INTERNET_INCORRECT_PASSWORD, 

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "WinInet.h"
-
 // ---------------------------------------------------------
 typedef struct {
 	TCHAR			m_szURL[MAX_PATH];

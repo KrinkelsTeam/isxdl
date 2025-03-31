@@ -28,8 +28,6 @@ public:
     
     // Split a URL into component parts
     bool Split(LPCTSTR lpsz) {
-		if(!inet.InternetCrackUrl) return false;
-
         // Be defensive
         ATLASSERT(lpsz != NULL && *lpsz != '\0');
         // Get the URL length
@@ -50,7 +48,7 @@ public:
         url.lpszExtraInfo = m_strExtraInfo.GetBuffer(dwLength);
         url.dwExtraInfoLength = dwLength;
         // Split
-		bool bRet = inet.InternetCrackUrl(lpsz, 0, 0, &url) != FALSE;
+		bool bRet = InternetCrackUrl(lpsz, 0, 0, &url) != FALSE;
         // Release buffers
         m_strScheme.ReleaseBuffer();
         m_strHostName.ReleaseBuffer();

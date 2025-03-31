@@ -2,37 +2,9 @@
 // isxdl.cpp : Defines the entry point for the DLL application.
 
 #include "stdafx.h"
-#include "wininet.h"
 #include "DownloadDlg.h"
 
 #define DLLAPI  __stdcall
-
-CWinInet	inet;
-
-// To minimize crt use (and save size)
-ULONGLONG myatol(LPCTSTR psz) {
-	ULONGLONG n = 0;
-	while(psz && *psz && *psz>='0' && *psz<='9') {
-		n *= 10;
-		n += *psz - '0';
-		psz++;
-	}
-	return n;
-}
-
-//#define toupper(x) ((x)>='a' && (x)<='z' ? (x) + 'A' - 'a' : (x))
-#define toupper(x) (x)
-
-int mystricmp(LPCTSTR psz1,LPCTSTR psz2) {
-	for(int i=0;;i++) {
-		int c1 = toupper(psz1[i]);
-		int c2 = toupper(psz2[i]);
-		int res = c1 - c2;
-		if(res!=0) return res;
-		if(!c1 || !c2) break;
-	}
-	return 0;
-}
 
 BOOL APIENTRY DllMain(HANDLE hModule,DWORD ul_reason_for_call,LPVOID lpReserved) {
 	if(ul_reason_for_call==DLL_PROCESS_DETACH)

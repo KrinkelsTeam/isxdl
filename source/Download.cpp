@@ -17,15 +17,15 @@ public:
 		NUMBERFMT nf;
 		nf.NumDigits = 0/*nDecimals*/;
 		GetLocaleInfo( loc, LOCALE_ILZERO, sDummy, 16 );
-		nf.LeadingZero = (UINT)myatol(sDummy);
+		nf.LeadingZero = (UINT)atol(sDummy);
 		GetLocaleInfo( loc, LOCALE_SGROUPING, sDummy, 16 );
-		nf.Grouping = (UINT)myatol(sDummy);
+		nf.Grouping = (UINT)atol(sDummy);
 		GetLocaleInfo( loc, LOCALE_SDECIMAL, sDecSep, 16 );
 		nf.lpDecimalSep = sDecSep;
 		GetLocaleInfo( loc, LOCALE_STHOUSAND, sThowSep, 16 );
 		nf.lpThousandSep = sThowSep;
 		GetLocaleInfo( loc, LOCALE_INEGNUMBER, sDummy, 16 );
-		nf.NegativeOrder = (UINT)myatol(sDummy);
+		nf.NegativeOrder = (UINT)atol(sDummy);
 
 		GetNumberFormat(loc,0,*this,&nf,buf,sizeof buf);
 		//GetNumberFormat(MAKELCID(MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),SORT_DEFAULT),0,tmp,NULL,buf,32);
@@ -49,10 +49,10 @@ CDownload::CDownload() {
 }
 
 CDownload::~CDownload() {
-	if(m_hFile) inet.InternetCloseHandle(m_hFile);
-	if(m_hConn) inet.InternetCloseHandle(m_hConn);
+	if(m_hFile) InternetCloseHandle(m_hFile);
+	if(m_hConn) InternetCloseHandle(m_hConn);
 	if(m_hInternet) {
-		inet.InternetSetStatusCallback(m_hInternet,m_iscCallback);
+		InternetSetStatusCallback(m_hInternet,m_iscCallback);
 		m_iscCallback = NULL;
 	}
 	CloseHandle(m_hEventWait);
@@ -119,11 +119,8 @@ void CDownload::SetFileInfo(LPCTSTR pszURL,CFileInfo* m_pFileInfo) {
 }
 
 bool CDownload::IsConnected() {
-	// If wininet.dll is too old, assume we are connected
-	if(!inet.InternetGetConnectedState) return true;
-
 	DWORD dwFlags = 0;
-	if(!inet.InternetGetConnectedState(&dwFlags,0))
+	if(!InternetGetConnectedState(&dwFlags,0))
 		return false;
 
 	return (dwFlags & (INTERNET_CONNECTION_LAN|INTERNET_CONNECTION_MODEM)) ? true : false;
@@ -132,7 +129,7 @@ bool CDownload::IsConnected() {
 void CDownload::AddFile(LPCTSTR pszURL,LPCTSTR pszFile,DWORD dwSize/*=0*/) {
 	// Check if this file already is listed
 	for(int i=0;i<m_files.GetSize();i++) {
-		if(!mystricmp(m_files[i]->m_szURL,pszURL) && !mystricmp(m_files[i]->m_szFile,pszFile))
+		if(!_tcsicmp(m_files[i]->m_szURL,pszURL) && !_tcsicmp(m_files[i]->m_szFile,pszFile))
 			// Already there
 			return;
 	}
@@ -173,11 +170,11 @@ ULONGLONG CDownload::GetTotalSize() {
 void CDownload::Reset() {
 	Henden::CSingleLock lock(m_cs,true);
 	if(m_hConn) {
-		inet.InternetCloseHandle(m_hConn);
+		InternetCloseHandle(m_hConn);
 		m_hConn = NULL;
 	}
 	if(m_hFile) {
-		inet.InternetCloseHandle(m_hFile);
+		InternetCloseHandle(m_hFile);
 		m_hFile = NULL;
 	}
 	m_bAskRetry = true;
@@ -197,7 +194,7 @@ void CDownload::SetGlobalOffline(BOOL fGoOffline) {
 		ci.dwConnectedState = INTERNET_STATE_CONNECTED;
 	}
 
-	inet.InternetSetOption(NULL, INTERNET_OPTION_CONNECTED_STATE, &ci, sizeof(ci));
+	InternetSetOption(NULL, INTERNET_OPTION_CONNECTED_STATE, &ci, sizeof(ci));
 }
 
 DWORD WINAPI CDownload::ThreadProc(LPVOID lpParameter) {
@@ -229,8 +226,8 @@ DWORD CDownload::ThreadProc() {
 void CDownload::GetInetError(CString& ref,DWORD dwLastError/*=GetLastError()*/) {
 	if(dwLastError==ERROR_INTERNET_EXTENDED_ERROR) {
 		DWORD dwError, dwChars = 0;
-		inet.InternetGetLastResponseInfo(&dwError,NULL,&dwChars);
-		inet.InternetGetLastResponseInfo(&dwError,ref.GetBuffer(++dwChars),&dwChars);
+		InternetGetLastResponseInfo(&dwError,NULL,&dwChars);
+		InternetGetLastResponseInfo(&dwError,ref.GetBuffer(++dwChars),&dwChars);
 		ref.ReleaseBufferSetLength(dwChars);
 	} else {
 		GetSysError(ref,dwLastError,_T("wininet.dll"));
@@ -346,9 +343,9 @@ status_moved:
 		LPCTSTR pszUser = NULL, pszPass = NULL;
 reconnect:
 		if(url.GetUserNameLength()==0 || (pszUser && pszPass))
-			m_hConn = inet.InternetConnect(m_hInternet, url.GetHostName(), url.GetPort(), pszUser, pszPass, dwService, dwFlags, (DWORD_PTR) this);
+			m_hConn = InternetConnect(m_hInternet, url.GetHostName(), url.GetPort(), pszUser, pszPass, dwService, dwFlags, (DWORD_PTR) this);
 		else
-			m_hConn = inet.InternetConnect(m_hInternet, url.GetHostName(), url.GetPort(), url.GetUserName(), url.GetPassword(), dwService, dwFlags, (DWORD_PTR) this);
+			m_hConn = InternetConnect(m_hInternet, url.GetHostName(), url.GetPort(), url.GetUserName(), url.GetPassword(), dwService, dwFlags, (DWORD_PTR) this);
 
 		if(!m_hConn) {
 			DWORD dwLastError = GetLastError();
@@ -375,12 +372,12 @@ reconnect:
 		strObject += url.GetExtraInfo();
 
 		if(url.GetScheme()==INTERNET_SCHEME_HTTP) {
-			m_hFile = inet.HttpOpenRequest(m_hConn,NULL,strObject,NULL,NULL,m_ppszAcceptTypes,
+			m_hFile = HttpOpenRequest(m_hConn,NULL,strObject,NULL,NULL,m_ppszAcceptTypes,
 				/*INTERNET_FLAG_NO_AUTO_REDIRECT|*/INTERNET_FLAG_RELOAD|INTERNET_FLAG_DONT_CACHE|INTERNET_FLAG_KEEP_CONNECTION,(DWORD_PTR)this);
 		} else if(url.GetScheme()==INTERNET_SCHEME_FTP) {
 			// Remove leading '/'
 			if(strObject.GetLength()>0 && strObject[0]==_T('/')) strObject.Delete(0);
-			m_hFile = inet.FtpOpenFile(m_hConn,strObject,GENERIC_READ,INTERNET_FLAG_TRANSFER_BINARY|INTERNET_FLAG_RELOAD,(DWORD_PTR)this);
+			m_hFile = FtpOpenFile(m_hConn,strObject,GENERIC_READ,INTERNET_FLAG_TRANSFER_BINARY|INTERNET_FLAG_RELOAD,(DWORD_PTR)this);
 		}
 
 		if(!m_hFile) {
@@ -396,9 +393,9 @@ reconnect:
 resend:
 		if(url.GetScheme()==INTERNET_SCHEME_HTTP) {
 #ifdef USE_RESUME
-			if(!inet.HttpSendRequest(m_hFile, pszHeaders, strRangeHeader.GetLength(), NULL, 0))
+			if(HttpSendRequest(m_hFile, pszHeaders, strRangeHeader.GetLength(), NULL, 0))
 #else
-			if(!inet.HttpSendRequest(m_hFile, NULL, 0, NULL, 0))
+			if(!HttpSendRequest(m_hFile, NULL, 0, NULL, 0))
 #endif
 			{
 				CString str;
@@ -416,7 +413,7 @@ resend:
 			ULONGLONG uLength = 0;
 			DWORD dwDummy = sizeof DWORD;
 
-			if(!inet.HttpQueryInfo(m_hFile,HTTP_QUERY_STATUS_CODE|HTTP_QUERY_FLAG_NUMBER,&dwStatusCode,&dwDummy,NULL)) {
+			if(!HttpQueryInfo(m_hFile,HTTP_QUERY_STATUS_CODE|HTTP_QUERY_FLAG_NUMBER,&dwStatusCode,&dwDummy,NULL)) {
 				CString str;
 				GetInetError(str);
 				GetString(IDS_ERROR_STATUSCODE,m_strError);
@@ -446,7 +443,7 @@ resend:
 #endif
 
 				DWORD dwDummy2;
-				if(!inet.HttpQueryInfo(m_hFile,HTTP_QUERY_CONTENT_LENGTH|HTTP_QUERY_FLAG_NUMBER,&dwDummy2,&dwDummy,NULL))
+				if(!HttpQueryInfo(m_hFile,HTTP_QUERY_CONTENT_LENGTH|HTTP_QUERY_FLAG_NUMBER,&dwDummy2,&dwDummy,NULL))
 					uLength = 0;
 				else
 					uLength = dwDummy2;
@@ -457,7 +454,7 @@ resend:
 #ifdef USE_RESUME
 			} else if(dwStatusCode==HTTP_STATUS_PARTIAL_CONTENT && pszHeaders) {
 				DWORD dwDummy2;
-				if(!inet.HttpQueryInfo(m_hFile,HTTP_QUERY_CONTENT_LENGTH|HTTP_QUERY_FLAG_NUMBER,&dwDummy2,&dwDummy,NULL))
+				if(!HttpQueryInfo(m_hFile,HTTP_QUERY_CONTENT_LENGTH|HTTP_QUERY_FLAG_NUMBER,&dwDummy2,&dwDummy,NULL))
 					uLength = 0;
 				else {
 					uLength = dwDummy2 + nResumePos;
@@ -472,7 +469,7 @@ resend:
 				CString strContentRange;
 				dwDummy = 256;
 				bool bDone = false;
-				if(inet.HttpQueryInfo(m_hFile,HTTP_QUERY_CONTENT_RANGE,strContentRange.GetBuffer(dwDummy),&dwDummy,NULL)) {
+				if(HttpQueryInfo(m_hFile,HTTP_QUERY_CONTENT_RANGE,strContentRange.GetBuffer(dwDummy),&dwDummy,NULL)) {
 					strContentRange.ReleaseBufferSetLength(dwDummy);
 					int nPos = strContentRange.ReverseFind('/');
 					if(nPos>0) {
@@ -500,7 +497,7 @@ resend:
 			} else if(dwStatusCode==HTTP_STATUS_REDIRECT || dwStatusCode==HTTP_STATUS_MOVED) {
 				char szLocation[MAX_PATH+1];
 				DWORD dwSize = MAX_PATH;
-				inet.HttpQueryInfo(m_hFile, HTTP_QUERY_LOCATION, szLocation, &dwSize, NULL);
+				HttpQueryInfo(m_hFile, HTTP_QUERY_LOCATION, szLocation, &dwSize, NULL);
 				strURL = szLocation;
 				GetString(IDS_STATUS_REDIRECT,str);
 				str.Replace(_T("%1"),strURL);
@@ -521,7 +518,7 @@ resend:
 		}
 
 		file.Close();
-		inet.InternetCloseHandle(m_hFile);
+		InternetCloseHandle(m_hFile);
 		m_hFile = NULL;
 
 		fileInfo.m_bDone = true;
@@ -541,7 +538,7 @@ bool CDownload::DoOperation(CAtlFile& file,ULONGLONG uLength,ULONGLONG& uTotal,U
 	do {
 		if(Abort()) return false;
 
-		if(!inet.InternetReadFile(m_hFile,szBuf,sizeof szBuf,&dwBytes)) {
+		if(!InternetReadFile(m_hFile,szBuf,sizeof szBuf,&dwBytes)) {
 			CString str;
 			GetInetError(str);
 			GetString(IDS_ERROR_READ,m_strError);
@@ -651,13 +648,13 @@ bool CDownload::OpenInternet() {
 	Henden::CSingleLock lock(m_cs,true);
 	if(m_hInternet) {
 		if(!m_iscCallback)
-			m_iscCallback = inet.InternetSetStatusCallback(m_hInternet,(INTERNET_STATUS_CALLBACK)CallMaster);
+			m_iscCallback = InternetSetStatusCallback(m_hInternet,(INTERNET_STATUS_CALLBACK)CallMaster);
 		return true;
 	}
 
 	SetGlobalOffline(false);
 
-	m_hInternet = inet.InternetOpen(_T("IS Download DLL"),INTERNET_OPEN_TYPE_PRECONFIG,NULL,NULL,0);
+	m_hInternet = InternetOpen(_T("IS Download DLL"),INTERNET_OPEN_TYPE_PRECONFIG,NULL,NULL,0);
 	if(!m_hInternet) {
 		CString str;
 		GetInetError(str);
@@ -666,7 +663,7 @@ bool CDownload::OpenInternet() {
 		return false;
 	}
 
-	m_iscCallback = inet.InternetSetStatusCallback(m_hInternet,(INTERNET_STATUS_CALLBACK)CallMaster);
+	m_iscCallback = InternetSetStatusCallback(m_hInternet,(INTERNET_STATUS_CALLBACK)CallMaster);
 	return true;
 }
 
@@ -693,9 +690,9 @@ status_moved:
 
 	HINTERNET hConn;
 	if(url.GetUserNameLength()==0)
-		hConn = inet.InternetConnect(m_hInternet, url.GetHostName(), url.GetPort(), NULL, NULL, dwService, dwFlags, 0);
+		hConn = InternetConnect(m_hInternet, url.GetHostName(), url.GetPort(), NULL, NULL, dwService, dwFlags, 0);
 	else
-		hConn = inet.InternetConnect(m_hInternet, url.GetHostName(), url.GetPort(), url.GetUserName(), url.GetPassword(), dwService, dwFlags, 0);
+		hConn = InternetConnect(m_hInternet, url.GetHostName(), url.GetPort(), url.GetUserName(), url.GetPassword(), dwService, dwFlags, 0);
 	if(!hConn)
 		return -1;
 
@@ -705,9 +702,9 @@ status_moved:
 	strObject += url.GetExtraInfo();
 
 	if(url.GetScheme()==INTERNET_SCHEME_HTTP) {
-		hFile = inet.HttpOpenRequest(hConn,_T("HEAD"),strObject,NULL,NULL,m_ppszAcceptTypes,INTERNET_FLAG_EXISTING_CONNECT|INTERNET_FLAG_RELOAD,0);
+		hFile = HttpOpenRequest(hConn,_T("HEAD"),strObject,NULL,NULL,m_ppszAcceptTypes,INTERNET_FLAG_EXISTING_CONNECT|INTERNET_FLAG_RELOAD,0);
 		if(!hFile) {
-			inet.InternetCloseHandle(hConn);
+			InternetCloseHandle(hConn);
 			return -1;
 		}
 
@@ -715,13 +712,13 @@ status_moved:
 		DWORD dwDummy = sizeof DWORD;
 
 resend:
-		if(!inet.HttpSendRequest(hFile, NULL, 0, NULL, 0)) {
-			inet.InternetCloseHandle(hFile);
-			inet.InternetCloseHandle(hConn);
+		if(!HttpSendRequest(hFile, NULL, 0, NULL, 0)) {
+			InternetCloseHandle(hFile);
+			InternetCloseHandle(hConn);
 			return -1;
 		}
 
-		if(!inet.HttpQueryInfo(hFile,HTTP_QUERY_STATUS_CODE|HTTP_QUERY_FLAG_NUMBER,&dwStatusCode,&dwDummy,NULL))
+		if(!HttpQueryInfo(hFile,HTTP_QUERY_STATUS_CODE|HTTP_QUERY_FLAG_NUMBER,&dwStatusCode,&dwDummy,NULL))
 			return -1;
 
 		if(dwStatusCode == HTTP_STATUS_PROXY_AUTH_REQ || dwStatusCode == HTTP_STATUS_DENIED) {
@@ -729,30 +726,30 @@ resend:
 			PostMessage(m_hWndServer,UWM_ERRORDLG,(WPARAM)hFile,0);
 			WaitForSingleObject(m_hEventWait,INFINITE);
 			if(!m_bErrorDlgResult) {
-				inet.InternetCloseHandle(hFile);
-				inet.InternetCloseHandle(hConn);
+				InternetCloseHandle(hFile);
+				InternetCloseHandle(hConn);
 				return -1;
 			}
 			goto resend;
 		} else if(dwStatusCode==HTTP_STATUS_REDIRECT || dwStatusCode==HTTP_STATUS_MOVED) {
 			char szLocation[MAX_PATH+1];
 			DWORD dwSize = MAX_PATH;
-			inet.HttpQueryInfo(hFile, HTTP_QUERY_LOCATION, szLocation, &dwSize, NULL);
+			HttpQueryInfo(hFile, HTTP_QUERY_LOCATION, szLocation, &dwSize, NULL);
 			strURL = szLocation;
-			inet.InternetCloseHandle(hFile);
+			InternetCloseHandle(hFile);
 			hFile = NULL;
-			inet.InternetCloseHandle(hConn);
+			InternetCloseHandle(hConn);
 			hConn = NULL;
 			goto status_moved;
 		} else if(dwStatusCode != HTTP_STATUS_OK) {
-			inet.InternetCloseHandle(hFile);
-			inet.InternetCloseHandle(hConn);
+			InternetCloseHandle(hFile);
+			InternetCloseHandle(hConn);
 			return -1;
 		}
 
-		if(!inet.HttpQueryInfo(hFile,HTTP_QUERY_CONTENT_LENGTH|HTTP_QUERY_FLAG_NUMBER,&dwLength,&dwDummy,NULL)) {
-			inet.InternetCloseHandle(hFile);
-			inet.InternetCloseHandle(hConn);
+		if(!HttpQueryInfo(hFile,HTTP_QUERY_CONTENT_LENGTH|HTTP_QUERY_FLAG_NUMBER,&dwLength,&dwDummy,NULL)) {
+			InternetCloseHandle(hFile);
+			InternetCloseHandle(hConn);
 			return -1;
 		}
 	} else if(url.GetScheme()==INTERNET_SCHEME_FTP) {
@@ -760,13 +757,13 @@ resend:
 		dwLength = 0;
 		CString strCmd;
 		strCmd.Format(_T("SIZE %s\r\n"),strObject);
-		if(inet.FtpCommand(hConn,FALSE,0,strCmd,(DWORD_PTR)this,NULL)) {
+		if(FtpCommand(hConn,FALSE,0,strCmd,(DWORD_PTR)this,NULL)) {
 			DWORD dwError, dwChars = 0;
-			inet.InternetGetLastResponseInfo(&dwError,NULL,&dwChars);
-			inet.InternetGetLastResponseInfo(&dwError,strCmd.GetBuffer(++dwChars),&dwChars);
+			InternetGetLastResponseInfo(&dwError,NULL,&dwChars);
+			InternetGetLastResponseInfo(&dwError,strCmd.GetBuffer(++dwChars),&dwChars);
 			strCmd.ReleaseBufferSetLength(dwChars);
 			if(strCmd.Left(3)==_T("213"))
-				dwLength = myatol(strCmd.Mid(3).Trim());
+				dwLength = atol(strCmd.Mid(3).Trim());
 #if 0
 		} else {
 			GetInetError(strCmd);
@@ -775,8 +772,8 @@ resend:
 		}
 	}
 
-	if(hFile) inet.InternetCloseHandle(hFile);
-	if(hConn) inet.InternetCloseHandle(hConn);
+	if(hFile) InternetCloseHandle(hFile);
+	if(hConn) InternetCloseHandle(hConn);
 	return dwLength;
 }
 
