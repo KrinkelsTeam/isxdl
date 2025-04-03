@@ -108,10 +108,10 @@ public:
 	}
 
 	/// Waits for the event to be set
-    void Wait() {
+	void Wait() {
 		ATLASSERT(m_hObject != NULL); 
-        WaitForSingleObject(m_hObject, INFINITE);
-    }
+		WaitForSingleObject(m_hObject, INFINITE);
+	}
 
 	/// Returns the windows api handle of the event
 	operator HANDLE() {
@@ -139,10 +139,10 @@ public:
 	}
 
 	/// Waits for the mutex to be available
-    void Wait() {
+	void Wait() {
 		ATLASSERT(m_hObject != NULL); 
-        WaitForSingleObject(m_hObject, INFINITE);
-    }
+		WaitForSingleObject(m_hObject, INFINITE);
+	}
 
 	/// Returns the mutex handle
 	operator HANDLE() {

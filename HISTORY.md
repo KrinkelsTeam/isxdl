@@ -1,6 +1,15 @@
 History
 =======
 
+Version 6.0.0
+-------------
+- Migrate project to Unicode.
+- Re-creating all language files (UTF-8) + added many new languages
+- Added HTTPS protocol support
+- Updated graphics (icon and small wizard image)
+- Added an example of using the library
+- General edits and project updates
+
 Version 5.1.0
 -------------
 - Can use a custom wizard image.

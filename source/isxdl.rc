@@ -1,5 +1,7 @@
 // Microsoft Visual C++ generated resource script.
 //
+#pragma code_page(65001)
+
 #include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
@@ -16,10 +18,7 @@
 // Neutral resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
-#ifdef _WIN32
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-#pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -34,7 +33,7 @@ BEGIN
     CONTROL         "",IDC_HEADERRECT,"Static",SS_WHITERECT,0,0,332,35
     LTEXT           "*",IDC_HEADERLABEL,16,6,271,8,0,WS_EX_TRANSPARENT
     LTEXT           "*",IDC_HEADERDESCRIPTION,27,16,260,18,0,WS_EX_TRANSPARENT
-    CONTROL         109,IDC_PICTURE,"Static",SS_BITMAP,293,1,35,33
+    CONTROL         IDB_BITMAP1,IDC_PICTURE,"Static",SS_BITMAP,293,1,35,33
     DEFPUSHBUTTON   "Cancel",IDOK,272,200,50,14
     LTEXT           "File:",IDC_STATIC_FILE,27,45,85,8
     LTEXT           "",IDC_FILE,112,45,191,8
@@ -86,7 +85,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_DOWNLOAD, DIALOG
     BEGIN
@@ -140,13 +139,13 @@ BEGIN
         BLOCK "000004b0"
         BEGIN
             VALUE "Comments", "https://istool.krinkels.org/"
-            VALUE "CompanyName", "Bjørnar Henden"
+            VALUE "CompanyName", "BjÃ¸rnar Henden"
             VALUE "FileDescription", "Download DLL"
             VALUE "FileVersion", "6, 0, 0, 0"
             VALUE "InternalName", "isxdl"
-            VALUE "LegalCopyright", "Copyright © 2002-2009"
+            VALUE "LegalCopyright", "Copyright Â© 2002-2009"
             VALUE "OriginalFilename", "isxdl.dll"
-            VALUE "ProductName", "ISX Download DLL"
+            VALUE "ProductName", "IS Download DLL"
             VALUE "ProductVersion", "6, 0, 0, 0"
         END
     END
@@ -164,6 +163,7 @@ END
 
 IDB_SMALL               BITMAP                  "WizardSmallImage.bmp"
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Icon
@@ -173,12 +173,13 @@ IDB_SMALL               BITMAP                  "WizardSmallImage.bmp"
 // remains consistent on all systems.
 IDI_SETUP               ICON                    "setup.ico"
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_TITLE               "File Download"
     IDS_ABORT               "Do you want to cancel the download?"
@@ -189,7 +190,7 @@ BEGIN
     IDS_STATUS_REDIRECT     "Redirecting to %1"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_STATUS_SENDING_REQUEST "Sending request..."
     IDS_STATUS_RESOLVING_NAME "Resolving %1"
@@ -206,18 +207,18 @@ BEGIN
     IDS_ERROR_REQUEST       "Error sending request.\n\n%1"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
-    IDS_ERROR_PROTOCOL      "Unsupported protocol. Only HTTP and FTP protocols are supported."
+    IDS_ERROR_PROTOCOL      "Unsupported protocol. Only HTTP, HTTPS and FTP protocols are supported."
     IDS_ERROR_CONNECT_SERVER "Failed to connect to %1.\n\n%2"
     IDS_ERROR_STATUSCODE    "Failed to query status code.\n\n%1"
     IDS_ERROR_REQUESTFILE   "Error requesting file."
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_ABOUT               "About..."
-    IDS_ABOUT               "ISX Download DLL\nCopyright © 2002, 2003\nBjørnar Henden\n\nhttps://istool.krinkels.org/"
+    IDS_ABOUT               "IS Download DLL\nCopyright (c) 2002-2009\nBjÃ¸rnar Henden\n\nhttps://istool.krinkels.org/"
     IDS_LABEL               "Download"
     IDS_DESCRIPTION         "Setup is now downloading additional files to your computer."
 END
@@ -227,13 +228,10 @@ END
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -260,7 +258,7 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -37,13 +37,13 @@ var
 begin
   if CurPageID = wpReady then begin
     // Extract the language selected for installation to a temporary folder
-    LngFile := ExpandConstant('{tmp}\' + ActiveLanguage + '.ini');
-    if not FileExists(ExpandConstant('{tmp}\' + ActiveLanguage + '.ini')) then 
+    LngFile := ExpandConstant('{tmp}\') + ActiveLanguage + '.ini';
+    if not FileExists(LngFile) then 
       ExtractTemporaryFile(ActiveLanguage + '.ini');
     isxdl_SetOption('language', LngFile);
     
     // Change title of the download window
-    isxdl_SetOption('title', PAnsiChar(WizardForm.Caption));
+    isxdl_SetOption('title', WizardForm.Caption);
     
     // Add files for downloading
     isxdl_AddFile('https://jrsoftware.org/download.php/is.exe?dontcount=1', ExpandConstant('{tmp}\innosetup-latest.exe'));

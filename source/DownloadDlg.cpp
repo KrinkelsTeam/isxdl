@@ -53,7 +53,7 @@ CDownloadDlg::~CDownloadDlg() {
 #ifdef WIZ
 LRESULT CDownloadDlg::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/) {
 	if(GetDlgItem(IDC_HEADERLABEL))
-        DeleteObject((HGDIOBJ)SendDlgItemMessage(IDC_HEADERLABEL, WM_GETFONT, 0, 0));
+		DeleteObject((HGDIOBJ)SendDlgItemMessage(IDC_HEADERLABEL, WM_GETFONT, 0, 0));
 
 	if(m_hWndParent) ::ShowWindow(m_hWndParent,SW_SHOW);
 

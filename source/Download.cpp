@@ -12,23 +12,21 @@ public:
 		TCHAR buf[128], sDummy[16], sDecSep[16], sThowSep[16];
 
 		LCID loc = LOCALE_USER_DEFAULT;
-		//LCID loc = MAKELCID(MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),SORT_DEFAULT);
 
 		NUMBERFMT nf;
 		nf.NumDigits = 0/*nDecimals*/;
-		GetLocaleInfo( loc, LOCALE_ILZERO, sDummy, 16 );
-		nf.LeadingZero = (UINT)atol(sDummy);
-		GetLocaleInfo( loc, LOCALE_SGROUPING, sDummy, 16 );
-		nf.Grouping = (UINT)atol(sDummy);
-		GetLocaleInfo( loc, LOCALE_SDECIMAL, sDecSep, 16 );
+		GetLocaleInfo(loc, LOCALE_ILZERO, sDummy, 16);
+		nf.LeadingZero = (UINT) wcstol(sDummy, nullptr, 10);
+		GetLocaleInfo(loc, LOCALE_SGROUPING, sDummy, 16);
+		nf.Grouping = (UINT) wcstol(sDummy, nullptr, 10);
+		GetLocaleInfo(loc, LOCALE_SDECIMAL, sDecSep, 16);
 		nf.lpDecimalSep = sDecSep;
-		GetLocaleInfo( loc, LOCALE_STHOUSAND, sThowSep, 16 );
+		GetLocaleInfo(loc, LOCALE_STHOUSAND, sThowSep, 16);
 		nf.lpThousandSep = sThowSep;
-		GetLocaleInfo( loc, LOCALE_INEGNUMBER, sDummy, 16 );
-		nf.NegativeOrder = (UINT)atol(sDummy);
+		GetLocaleInfo(loc, LOCALE_INEGNUMBER, sDummy, 16 );
+		nf.NegativeOrder = (UINT) wcstol(sDummy, nullptr, 10);
 
-		GetNumberFormat(loc,0,*this,&nf,buf,sizeof buf);
-		//GetNumberFormat(MAKELCID(MAKELANGID(LANG_ENGLISH,SUBLANG_ENGLISH_US),SORT_DEFAULT),0,tmp,NULL,buf,32);
+		GetNumberFormat(loc, 0, *this, &nf, buf, sizeof(buf) / sizeof(TCHAR));
 		Format(_T("%s"),buf);
 	}
 };
@@ -72,8 +70,8 @@ void CDownload::StatusCallback(DWORD dwInternetStatus, LPVOID lpvStatusInformati
 	CString str;
 	switch(dwInternetStatus) {
 	case INTERNET_STATUS_CONNECTED_TO_SERVER:
-		GetString(IDS_STATUS_CONNECTED_TO_SERVER,str);
-		str.Replace(_T("%1"), (LPCTSTR)lpvStatusInformation);
+		GetString(IDS_STATUS_CONNECTED_TO_SERVER, str);
+		str.Replace(_T("%1"), CA2W((char*)lpvStatusInformation, CP_ACP));
 		break;
 	case INTERNET_STATUS_REQUEST_SENT:
 		GetString(IDS_STATUS_RECEIVING, str);
@@ -83,16 +81,16 @@ void CDownload::StatusCallback(DWORD dwInternetStatus, LPVOID lpvStatusInformati
 		break;
 	case INTERNET_STATUS_RESOLVING_NAME:
 		GetString(IDS_STATUS_RESOLVING_NAME, str);
-		str.Replace(_T("%1"), (LPCTSTR)lpvStatusInformation);
+		str.Replace(_T("%1"), CA2W((char*)lpvStatusInformation, CP_ACP));
 		break;
 	case INTERNET_STATUS_REDIRECT:
 		SetFileInfo((LPCTSTR)lpvStatusInformation, m_pCurrentFile);
 		GetString(IDS_STATUS_REDIRECT, str);
-		str.Replace(_T("%1"), (LPCTSTR)lpvStatusInformation);
+		str.Replace(_T("%1"), CA2W((char*)lpvStatusInformation, CP_ACP));
 		break;
 	case INTERNET_STATUS_CONNECTING_TO_SERVER:
 		GetString(IDS_STATUS_CONNECTING, str);
-		str.Replace(_T("%1"), (LPCTSTR)lpvStatusInformation);
+		str.Replace(_T("%1"), CA2W((char*)lpvStatusInformation, CP_ACP));
 		break;
 	default:
 		return;
@@ -128,7 +126,7 @@ bool CDownload::IsConnected() {
 
 void CDownload::AddFile(LPCTSTR pszURL, LPCTSTR pszFile, DWORD dwSize/*=0*/) {
 	// Check if this file already is listed
-	for(int i = 0;i < m_files.GetSize(); i++) {
+	for(int i = 0; i < m_files.GetSize(); i++) {
 		if(!_tcsicmp(m_files[i]->m_szURL, pszURL) && !_tcsicmp(m_files[i]->m_szFile, pszFile))
 			// Already there
 			return;
@@ -221,9 +219,10 @@ DWORD CDownload::ThreadProc() {
 	} while(true);
 	PostMessage(m_hWndServer, UWM_THREADDONE, 0, 0);
 	return 0;
+    m_dwRunStart = GetTickCount();
 }
 
-void CDownload::GetInetError(CString& ref,DWORD dwLastError/*=GetLastError()*/) {
+void CDownload::GetInetError(CString& ref, DWORD dwLastError/*=GetLastError()*/) {
 	if(dwLastError == ERROR_INTERNET_EXTENDED_ERROR) {
 		DWORD dwError, dwChars = 0;
 		InternetGetLastResponseInfo(&dwError, NULL, &dwChars);
@@ -262,7 +261,7 @@ bool CDownload::Run() {
 	}
 
 	if(uTotalSize != (ULONGLONG) - 1) ::PostMessage(m_hWndServer, UWM_POSALL, 0, MYSIZE(uTotalSize));
-    m_dwRunStart = GetTickCount();
+	m_dwRunStart = GetTickCount();
 
 	m_nCount = 0;
 	ULONGLONG uTotal = 0;
@@ -345,7 +344,7 @@ status_moved:
 		CUserPass userpass;
 		LPCTSTR pszUser = NULL, pszPass = NULL;
 reconnect:
-		if(url.GetUserNameLength()==0 || (pszUser && pszPass))
+		if(url.GetUserNameLength() == 0 || (pszUser && pszPass))
 			m_hConn = InternetConnect(m_hInternet, url.GetHostName(), url.GetPort(), pszUser, pszPass, dwService, dwFlags, (DWORD_PTR) this);
 		else
 			m_hConn = InternetConnect(m_hInternet, url.GetHostName(), url.GetPort(), url.GetUserName(), url.GetPassword(), dwService, dwFlags, (DWORD_PTR) this);
@@ -364,7 +363,7 @@ reconnect:
 				}
 			}
 			CString str;
-			GetInetError(str,dwLastError);
+			GetInetError(str, dwLastError);
 			GetString(IDS_ERROR_CONNECT_SERVER, m_strError);
 			m_strError.Replace(_T("%1"), url.GetHostName());
 			m_strError.Replace(_T("%2"), str);
@@ -517,7 +516,7 @@ resend:
 				return false;
 			}
 		} else if(url.GetScheme() == INTERNET_SCHEME_FTP) {
-			file.Seek(0,FILE_BEGIN);	// No resume here yet
+			file.Seek(0, FILE_BEGIN);	// No resume here yet
 			if(!DoOperation(file, fileInfo.m_uLength, uTotal, uTotalSize, fileInfo)) {
 				return false;
 			}
@@ -776,7 +775,7 @@ resend:
 			InternetGetLastResponseInfo(&dwError, strCmd.GetBuffer(++dwChars), &dwChars);
 			strCmd.ReleaseBufferSetLength(dwChars);
 			if(strCmd.Left(3) == _T("213"))
-				dwLength = atol(strCmd.Mid(3).Trim());
+				dwLength = wcstol(strCmd.Mid(3).Trim(), nullptr, 10);
 #if 0
 		} else {
 			GetInetError(strCmd);
@@ -808,29 +807,39 @@ bool CDownload::GetSysError(CString& ref, DWORD dwError/*=GetLastError()*/, LPCT
 		return true;
 	} else {
 		if(pszModule)
-			ref.Format(_T("Error %d from %s."),dwError,pszModule);
+			ref.Format(_T("Error %d from %s."), dwError, pszModule);
 		else
-			ref.Format(_T("Error %d."),dwError);
+			ref.Format(_T("Error %d."), dwError);
 		return false;
 	}
 }
 
-void CDownload::PostTxtMsg(UINT uMsg,UINT uID,CString& str) {
+void CDownload::PostTxtMsg(UINT uMsg, UINT uID, CString& str) {
 	LPTSTR pszText = new TCHAR[str.GetLength() + 1];
-	_tcscpy_s(pszText,str.GetLength() + 1,str);
+	_tcscpy_s(pszText, str.GetLength() + 1, str);
 	PostMessage(m_hWndServer, uMsg, (WPARAM)uID, (LPARAM)pszText);
 }
 
-bool CDownload::GetString(UINT uID,CString& str) {
+bool CDownload::GetString(UINT uID, CString& str) {
 	str.Empty();
-	if(!m_strOptionLanguage.IsEmpty() && uID != IDS_ABOUT) {
+	if (!m_strOptionLanguage.IsEmpty() && uID != IDS_ABOUT) {
 		CString strKey;
 		strKey.Format(_T("%d"), uID);
-		DWORD nSize = GetPrivateProfileString(_T("strings"), strKey, _T(""), str.GetBuffer(1000), 1000, m_strOptionLanguage);
-		str.ReleaseBufferSetLength(nSize);
-		while(str.Replace(_T("\\n"), _T("\n")));
+
+		char buffer[1024] = { 0 };
+		CStringA strFileA = CW2A(m_strOptionLanguage, CP_UTF8);
+		DWORD nSize = GetPrivateProfileStringA("strings", CT2A(strKey, CP_UTF8), "", buffer, sizeof(buffer) - 1, strFileA);
+
+		if (nSize > 0) {
+			buffer[nSize] = '\0';
+			str = CA2W(buffer, CP_UTF8);
+			str.Replace(_T("\\n"), _T("\n"));
+		}
 	}
 
-	if(str.IsEmpty()) str.LoadString(uID);
+	if (str.IsEmpty()) {
+		str.LoadString(uID);
+	}
+
 	return !str.IsEmpty();
 }

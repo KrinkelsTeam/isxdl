@@ -125,13 +125,13 @@
 
 		<h2 class="border-bottom">Definitions for Inno Setup Pascal Scripting</h2>
 		<pre>
-function isxdl_Download(hWnd: Integer; URL, Filename: PAnsiChar): Integer;
+function isxdl_Download(hWnd: Integer; URL, Filename: String): Integer;
 external 'isxdl_Download@files:isxdl.dll stdcall';
 
-procedure isxdl_AddFile(URL, Filename: PAnsiChar);
+procedure isxdl_AddFile(URL, Filename: String);
 external 'isxdl_AddFile@files:isxdl.dll stdcall';
 
-procedure isxdl_AddFileSize(URL, Filename: PAnsiChar; Size: Cardinal);
+procedure isxdl_AddFileSize(URL, Filename: String; Size: Cardinal);
 external 'isxdl_AddFileSize@files:isxdl.dll stdcall';
 
 function isxdl_DownloadFiles(hWnd: Integer): Integer;
@@ -143,10 +143,10 @@ external 'isxdl_ClearFiles@files:isxdl.dll stdcall';
 function isxdl_IsConnected: Integer;
 external 'isxdl_IsConnected@files:isxdl.dll stdcall';
 
-function isxdl_SetOption(Option, Value: PAnsiChar): Integer;
+function isxdl_SetOption(Option, Value: String): Integer;
 external 'isxdl_SetOption@files:isxdl.dll stdcall';
 
-function isxdl_GetFileName(URL: PAnsiChar): PAnsiChar;
+function isxdl_GetFileName(URL: String): String;
 external 'isxdl_GetFileName@files:isxdl.dll stdcall';
 		</pre>
 
@@ -178,14 +178,14 @@ Public Declare Function isxdl_GetFileName Lib "isxdl.dll" _
 		<h2 class="border-bottom">Definitions for C++</h2>
 		<pre>
 extern "C" {
-	int isxdl_Download(HWND hWndParent,LPCTSTR pszURL,LPCTSTR pszFileName);
-	void isxdl_AddFile(LPCTSTR pszURL,LPCTSTR pszFileName);
-	void isxdl_AddFileSize(LPCTSTR pszURL,LPCTSTR pszFileName,DWORD dwSize);
+	int isxdl_Download(HWND hWndParent, LPCWSTR pszURL, LPCWSTR pszFileName);
+	void isxdl_AddFile(LPCWSTR pszURL, LPCWSTR pszFileName);
+	void isxdl_AddFileSize(LPCWSTR pszURL, LPCWSTR pszFileName, DWORD dwSize);
 	int isxdl_DownloadFiles(HWND hWndParent);
 	void isxdl_ClearFiles(void);
 	int isxdl_IsConnected(void);
-	int isxdl_SetOption(LPCTSTR pszOption,LPCTSTR pszValue);
-	LPCTSTR isxdl_GetFileName(LPCTSTR pszURL);
+	int isxdl_SetOption(LPCWSTR pszOption, LPCWSTR pszValue);
+	LPCWSTR isxdl_GetFileName(LPCWSTR pszURL);
 };</pre>
 		
 		<h2 id="isxdl_download" class="border-bottom">isxdl_Download</h2>
@@ -197,8 +197,8 @@ extern "C" {
 		<pre>
 int isxdl_Download(
 	HWND	hWndParent,
-	LPCTSTR	pszURL,
-	LPCTSTR	pszFileName
+	LPCWSTR	pszURL,
+	LPCWSTR	pszFileName
 );</pre>
 
 		<h3>Parameters</h3>
@@ -224,8 +224,8 @@ int isxdl_Download(
 		<h3>Syntax</h3>
 		<pre>
 void isxdl_AddFile(
-	LPCTSTR	pszURL,
-	LPCTSTR	pszFileName
+	LPCWSTR	pszURL,
+	LPCWSTR	pszFileName
 );</pre>
 
 		<h3>Parameters</h3>
@@ -257,8 +257,8 @@ void isxdl_AddFile(
 		<h3>Syntax</h3>
 		<pre>
 void isxdl_AddFileSize(
-	LPCTSTR	pszURL,
-	LPCTSTR	pszFileName,
+	LPCWSTR	pszURL,
+	LPCWSTR	pszFileName,
 	DWORD	dwSize
 );		</pre>
 
@@ -340,8 +340,8 @@ int isxdl_IsConnected();</pre>
 		<h3>Syntax</h3>
 		<pre>
 int isxdl_SetOption(
-	LPCTSTR	pszOption,
-	LPCTSTR	pszValue
+	LPCWSTR	pszOption,
+	LPCWSTR	pszValue
 );</pre>
 
 		<h3>Parameters</h3>
@@ -383,8 +383,8 @@ int isxdl_SetOption(
 
 		<h3>Syntax</h3>
 		<pre>
-LPCTSTR GetFileName(
-	LPCTSTR pszURL
+LPCWSTR GetFileName(
+	LPCWSTR pszURL
 );</pre>
 
 		<h3>Parameters</h3>

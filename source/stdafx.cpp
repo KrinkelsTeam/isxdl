@@ -1,5 +1,5 @@
-// Copyright © 2002 1998-2000 Bjørnar Henden
-// $Id: stdafx.cpp,v 1.1 2003/09/30 18:49:26 Bjørnar Exp $
+// Copyright Â© 2002-2009 BjÃ¸rnar Henden
+// $Id: stdafx.cpp,v 1.1 2003/09/30 18:49:26 BjÃ¸rnar Exp $
 
 // stdafx.cpp : source file that includes just the standard includes
 // isxdl.pch will be the pre-compiled header

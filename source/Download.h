@@ -15,7 +15,7 @@ typedef struct {
 } CUserPass;
 
 enum {
-	UWM_THREADDONE = WM_USER+0x100,
+	UWM_THREADDONE = WM_USER + 0x100,
 	UWM_ERRORDLG,
 	UWM_MSGBOX,
 	UWM_POSFILE,

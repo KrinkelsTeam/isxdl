@@ -1,4 +1,4 @@
-// Copyright © 2002-2003 Bjørnar Henden
+// Copyright Â© 2002-2009 BjÃ¸rnar Henden
 // isxdl.cpp : Defines the entry point for the DLL application.
 
 #include "stdafx.h"
@@ -10,7 +10,7 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserve
 	if(ul_reason_for_call == DLL_PROCESS_DETACH)
 		CDownloadDlg::CleanupStatic();
 
-    return TRUE;
+	return TRUE;
 }
 
 extern "C" long DLLAPI DownloadFiles(HWND hWndParent) {
