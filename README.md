@@ -5,6 +5,11 @@ IS Download DLL is a "plugin" for [Inno Setup](http://innosetup.com/) that allow
 
 Primarily written to be used from Inno Setup, but can be used by any software that can call DLL's. 
 
+Website
+-------
+
+Visit the [ISTool website](https://istool.krinkels.org/plugins/isxdl) for the full documentation, latest news and downloads.
+
 Getting Started
 ---------------
 
