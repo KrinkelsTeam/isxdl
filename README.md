@@ -1,49 +1,41 @@
 Inno Setup Download DLL
 ======
-
 IS Download DLL is a "plugin" for [Inno Setup](http://innosetup.com/) that allows you to download files from the Internet during the installation process. Support HTTP, HTTPS and FTP protocols.
 
 Primarily written to be used from Inno Setup, but can be used by any software that can call DLL's. 
 
 Website
 -------
-
 Visit the [ISTool website](https://istool.krinkels.org/plugins/isxdl) for the full documentation, latest news and downloads.
 
-Getting Started
+Build Sources
 ---------------
+First you need to download the sources from Github. From the command line do:
 
-1. **Obtain sources**
+```
+> git clone https://github.com/KrinkelsTeam/isxdl.git isxdl
+> cd isxdl
+> git submodule init
+> git submodule update
+```
 
-    First you need to download the sources from Github. From the command line do:
+If you don't have the Git client (`git`), get it from:
 
-    ```
-    > git clone https://github.com/KrinkelsTeam/isxdl.git isxdl
-    > cd isxdl
-    > git submodule init
-    > git submodule update
-    ```
+https://git-scm.com/
 
-    If you don't have the Git client (`git`), get it from:
+To update your sources from the command line do:
+```
+ > git pull
+ > git submodule update
+```
 
-    https://git-scm.com/
+We compile ISxDL under Visual Studio 2022.
 
-    To update your sources from the command line do:
-    ```
-    > git pull
-    > git submodule update
-    ```
-
-    To be able to contribute to ISxDL, clone your own fork instead of
-    cloning the main ISxDL repository, commit your work on topic branches
-    and make pull requests.
-
-2. **Install Visual Studio**
-   
-   We compile ISxDL under Visual Studio 2022 Community Edition.
-
-   There's a free version of MSVC available called the Community Edition.
-   See https://visualstudio.microsoft.com/vs/community/.
+Contribute
+----------
+To be able to contribute to ISxDL, clone your own fork instead of
+cloning the main ISxDL repository, commit your work on topic branches
+and make pull requests.
 
 Source code tips
 ----------------
